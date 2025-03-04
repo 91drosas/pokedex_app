@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
-    id("com.google.dagger.hilt.android") version "2.51.1" apply false
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -30,14 +30,14 @@ android {
         }
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.4.3"
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -69,8 +69,9 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.7.2")
 
     // Hilt (Inyección de dependencias)
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     // Retrofit (Llamadas a la API)
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -86,4 +87,13 @@ dependencies {
 
     // Paging 3 (Paginación)
     implementation("androidx.paging:paging-compose:3.2.1")
+
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.2.2")
+
+    // Icons
+    implementation("androidx.compose.material:material-icons-extended:1.3.1")
+
+    // Pager
+    implementation("com.google.accompanist:accompanist-pager:0.28.0")
 }
