@@ -7,7 +7,7 @@ import javax.inject.Inject
 class PokemonRepository @Inject constructor(
     private val pokemonListApi: PokemonListApi
 ) {
-    suspend fun getPokemonList() : PokemonList{
+    suspend fun getPokemonList() : PokemonList {
         return pokemonListApi.getPokemonList()
     }
 }
