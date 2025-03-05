@@ -12,6 +12,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -38,7 +41,31 @@ fun PokemonScreen(
     Column(
         modifier = Modifier.fillMaxSize() // Asegura que el Column ocupe toda la pantalla
     ) {
-        // LazyColumn con weight para ocupar el espacio restante
+        // Header
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Título
+            Text(
+                text = "Pokedex",
+                style = MaterialTheme.typography.headlineMedium
+            )
+
+            // Botón del menú lateral
+            IconButton(onClick = { /* Abrir menú lateral */ }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_pokeball),
+                    contentDescription = "Menú lateral",
+                    modifier = Modifier
+                        .size(32.dp)
+                )
+            }
+        }
+        // Content
         LazyColumn(
             modifier = Modifier.weight(1f) // Ocupa el espacio restante
         ) {
