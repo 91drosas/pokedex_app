@@ -1,6 +1,7 @@
 package com.example.pokedex.screens
 
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,9 +31,24 @@ fun PokemonScreen(
 ) {
     val state by viewModel.state.collectAsState()
     Log.d("pokemonScreen", "${state.size}")
-    LazyColumn {
-        items(state) { pokemon ->
-            PokemonCard(pokemon)
+    Column {
+        LazyColumn {
+            items(state) { pokemon ->
+                PokemonCard(pokemon)
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(onClick = { viewModel.previousPage() }) {
+                Text("Previous")
+            }
+            Button(onClick = { viewModel.nextPage() }) {
+                Text("Next")
+            }
         }
     }
 }
@@ -53,18 +70,19 @@ fun PokemonCard(
                     modifier = modifier.size(120.dp),
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
                 ) {
-                    AsyncImage(
-                        model = pokemon.url,
-                        contentDescription = pokemon.name,
-                        contentScale = ContentScale.FillBounds
-                    )
+                    pokemon.imageUrl?.let { url ->
+                        AsyncImage(
+                            model = url,
+                            contentDescription = pokemon.name,
+                            contentScale = ContentScale.FillBounds
+                        )
+                    }
                 }
 
                 Column(
                     modifier
                         .padding(16.dp)
                         .align(Alignment.CenterVertically)
-                        .weight(1f)
                 ) {
                     Text(text = pokemon.name,
                         style = MaterialTheme.typography.titleLarge)

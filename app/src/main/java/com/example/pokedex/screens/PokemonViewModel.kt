@@ -15,14 +15,34 @@ import javax.inject.Inject
 class PokemonViewModel @Inject constructor(
     private val repo: PokemonRepository
 ) : ViewModel() {
-    private val _state = MutableStateFlow(emptyList<Pokemon>())
+    private val _state = MutableStateFlow<List<Pokemon>>(emptyList())
     val state : StateFlow<List<Pokemon>>
         get() = _state
 
+    private var offset = 0
+    private val limit = 20
+
     init {
+        loadPokemonList()
+    }
+
+    private fun loadPokemonList() {
         viewModelScope.launch {
-            _state.value = repo.getPokemonList().results
-            Log.d("pokemonViewModel", repo.getPokemonList().results.toString())
+            val pokemonList = repo.getPokemonList(limit, offset)
+            _state.value = pokemonList
+            Log.d("pokemonViewModel", pokemonList.toString())
+        }
+    }
+
+    fun nextPage() {
+        offset += limit
+        loadPokemonList()
+    }
+
+    fun previousPage() {
+        if (offset >= limit) {
+            offset -= limit
+            loadPokemonList()
         }
     }
 }
