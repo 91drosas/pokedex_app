@@ -30,7 +30,7 @@ android {
         }
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.4"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -70,8 +70,8 @@ dependencies {
 
     // Hilt (Inyección de dependencias)
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-compiler:2.51.1")
 
     // Retrofit (Llamadas a la API)
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -92,7 +92,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.2.2")
 
     // Icons
-    implementation("androidx.compose.material:material-icons-extended:1.3.1")
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
 
     // Pager
     implementation("com.google.accompanist:accompanist-pager:0.28.0")

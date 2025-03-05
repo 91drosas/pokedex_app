@@ -8,6 +8,6 @@ class PokemonRepository @Inject constructor(
     private val pokemonListApi: PokemonListApi
 ) {
     suspend fun getPokemonList() : PokemonList {
-        return pokemonListApi.getPokemonList()
+        return pokemonListApi.getPokemonList(10, 0)
     }
 }
