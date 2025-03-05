@@ -17,7 +17,8 @@ class PokemonRepository @Inject constructor(
         return pokemonList.results.map { pokemon ->
             val pokemonDetail = pokemonListApi.getPokemonDetail(pokemon.url)
             val imageUrl = pokemonDetail.sprites.front_default
-            Pokemon(pokemon.name, pokemon.url, imageUrl)
+            val type = pokemonDetail.types
+            Pokemon(pokemon.name, pokemon.url, imageUrl, type)
         }
     }
 }
