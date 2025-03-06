@@ -3,6 +3,7 @@ package com.example.pokedex.screens
 import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,13 +43,17 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pokedex.R
 import com.example.pokedex.model.Pokemon
+import com.example.pokedex.utils.Constants.typeColors
+import com.example.pokedex.utils.Constants.typeTranslations
 import java.util.Locale
 
 @Composable
 fun PokemonScreen(
+    navController: NavController,
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -77,7 +82,7 @@ fun PokemonScreen(
     Column(
         modifier = Modifier
             .fillMaxSize() // Asegura que el Column ocupe toda la pantalla
-            .background(Color.Red)
+            .background(Color.White) // Red
     ) {
         // Header
         Row(
@@ -93,7 +98,7 @@ fun PokemonScreen(
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Bold
                 ),
-                color = Color.White
+                color = Color.Black
             )
 
             // Botón del menú lateral
@@ -113,7 +118,12 @@ fun PokemonScreen(
                 .background(Color.White)
         ) {
             items(state) { pokemon ->
-                PokemonCard(pokemon)
+                PokemonCard(
+                    pokemon = pokemon,
+                    onClick = {
+                        navController.navigate("pokemon_detail/${pokemon.name}")
+                    }
+                )
             }
         }
 
@@ -154,54 +164,9 @@ fun PokemonScreen(
 @Composable
 fun PokemonCard(
     pokemon: Pokemon,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Mapa de colores para cada tipo de Pokémon
-    val typeColors = mapOf(
-        "steel" to Color(0xFF60A1B8),
-        "water" to Color(0xFF2980EF),
-        "bug" to Color(0xFF91A119),
-        "dragon" to Color(0xFF5061E1),
-        "electric" to Color(0xFFFAC000),
-        "ghost" to Color(0xFF704170),
-        "fire" to Color(0xFFE62829),
-        "fairy" to Color(0xFFEF71EF),
-        "ice" to Color(0xFF3FD8FF),
-        "fighting" to Color(0xFFFF8000),
-        "normal" to Color(0xFF9FA19F),
-        "grass" to Color(0xFF3FA129),
-        "psychic" to Color(0xFFEF4179),
-        "rock" to Color(0xFFAFA981),
-        "dark" to Color(0xFF50413F),
-        "ground" to Color(0xFF915121),
-        "poison" to Color(0xFF8F41CB),
-        "flying" to Color(0xFF81B9EF),
-        "egg" to Color(0xFF6BA294)
-    )
-
-    // Mapa de traducciones (inglés -> español)
-    val typeTranslations = mapOf(
-        "steel" to "acero",
-        "water" to "agua",
-        "bug" to "bicho",
-        "dragon" to "dragón",
-        "electric" to "eléctrico",
-        "ghost" to "fantasma",
-        "fire" to "fuego",
-        "fairy" to "hada",
-        "ice" to "hielo",
-        "fighting" to "lucha",
-        "normal" to "normal",
-        "grass" to "planta",
-        "psychic" to "psíquico",
-        "rock" to "roca",
-        "dark" to "siniestro",
-        "ground" to "tierra",
-        "poison" to "veneno",
-        "flying" to "volador",
-        "egg" to "huevo"
-    )
-
     // Obtener el primer tipo del Pokémon (puedes ajustar esto si hay múltiples tipos)
     val primaryType = pokemon.type?.firstOrNull()?.type?.name ?: "normal"
 
@@ -215,7 +180,8 @@ fun PokemonCard(
         shape = MaterialTheme.shapes.medium,
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = cardColor)
     ) {
         Row {
