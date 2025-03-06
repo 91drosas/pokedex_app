@@ -1,6 +1,5 @@
 package com.example.pokedex.screens
 
-import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,33 +17,33 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.TextField
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pokedex.R
 import com.example.pokedex.model.Pokemon
+import com.example.pokedex.model.PokemonDetail
 import com.example.pokedex.utils.Constants.typeColors
 import com.example.pokedex.utils.Constants.typeTranslations
 
@@ -54,7 +53,17 @@ fun PokemonScreen(
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val searchResult by viewModel.searchResult.collectAsState()
+    val searchHistory by viewModel.searchHistory.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
+    var isSearchAreaVisible by remember { mutableStateOf(false) } // Estado para controlar la visibilidad
+
     Log.d("pokemonScreen", "${state.size}")
+
+    // Cargar el historial de búsquedas al iniciar la pantalla
+    LaunchedEffect(Unit) {
+        viewModel.loadSearchHistory()
+    }
 
     Column(
         modifier = Modifier
@@ -78,16 +87,114 @@ fun PokemonScreen(
                 color = Color.Black
             )
 
-            // Botón del menú lateral
-            IconButton(onClick = { /* Abrir menú lateral */ }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.icon_pokeball),
-                    contentDescription = "Menú lateral",
-                    modifier = Modifier
-                        .size(32.dp)
-                )
+            // Botones de lupa y menú lateral
+            Row {
+                // Botón de lupa para mostrar/ocultar el área de búsqueda
+                IconButton(onClick = { isSearchAreaVisible = !isSearchAreaVisible }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.icon_search), // Ícono de lupa
+                        contentDescription = if (isSearchAreaVisible) "Ocultar buscador" else "Mostrar buscador",
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+
+                // Botón del menú lateral
+                IconButton(onClick = { /* Abrir menú lateral */ }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.icon_pokeball),
+                        contentDescription = "Menú lateral",
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
             }
         }
+
+        // Área del buscador (visible u oculta)
+        if (isSearchAreaVisible) {
+            Column {
+                // Campo de búsqueda
+                TextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    placeholder = { Text("Buscar Pokémon...") }
+                )
+
+                // Botón de búsqueda
+                Button(
+                    onClick = { viewModel.searchPokemon(searchQuery) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text("Buscar")
+                }
+
+                // Mostrar resultados de búsqueda
+                searchResult?.let { pokemonDetail ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .clickable {
+                                // Navegar a la pantalla de detalles
+                                navController.navigate("pokemon_detail/${pokemonDetail.name}")
+                            },
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(
+                                text = pokemonDetail.name.uppercase(),
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+                            Text(
+                                text = "Tipo: ${pokemonDetail.types.joinToString(", ") { it.type.name.uppercase() }}",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                }
+
+                // Mostrar historial de búsquedas
+                LazyColumn {
+                    items(searchHistory) { history ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            // Texto de la búsqueda
+                            Text(
+                                text = history.search_query,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable { searchQuery = history.search_query }
+                            )
+
+                            // Botón para eliminar la búsqueda
+                            IconButton(
+                                onClick = { viewModel.deleteSearchHistory(history.search_query) },
+                                modifier = Modifier.size(24.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.icon_close), // Ícono de "X"
+                                    contentDescription = "Eliminar búsqueda"
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         // Content
         LazyColumn(
             modifier = Modifier
@@ -203,4 +310,13 @@ fun PokemonCard(
             }
         }
     }
+}
+
+fun PokemonDetail.toPokemon(): Pokemon {
+    return Pokemon(
+        name = this.name,
+        url = this.species.url, // Otra URL relevante si es necesario
+        imageUrl = this.sprites.other.home.front_default,
+        type = this.types
+    )
 }

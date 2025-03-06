@@ -3,7 +3,9 @@ package com.example.pokedex.screens
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokedex.data.local.SearchHistory
 import com.example.pokedex.model.Pokemon
+import com.example.pokedex.model.PokemonDetail
 import com.example.pokedex.repository.PokemonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +24,12 @@ class PokemonViewModel @Inject constructor(
     private var offset = 0
     private val limit = 20
     private var hasNextPage = true
+
+    private val _searchResult = MutableStateFlow<PokemonDetail?>(null)
+    val searchResult: StateFlow<PokemonDetail?> get() = _searchResult
+
+    private val _searchHistory = MutableStateFlow<List<SearchHistory>>(emptyList())
+    val searchHistory: StateFlow<List<SearchHistory>> get() = _searchHistory
 
     init {
         loadPokemonList()
@@ -51,6 +59,26 @@ class PokemonViewModel @Inject constructor(
         if (offset >= limit) {
             offset -= limit
             loadPokemonList()
+        }
+    }
+
+    fun searchPokemon(query: String) {
+        viewModelScope.launch {
+            _searchResult.value = repo.searchPokemon(query)
+            _searchHistory.value = repo.getSearchHistory() // Actualizar el historial después de buscar
+        }
+    }
+
+    fun loadSearchHistory() {
+        viewModelScope.launch {
+            _searchHistory.value = repo.getSearchHistory()
+        }
+    }
+
+    fun deleteSearchHistory(query: String) {
+        viewModelScope.launch {
+            repo.deleteSearchHistory(query)
+            loadSearchHistory() // Recargar el historial después de eliminar
         }
     }
 }
