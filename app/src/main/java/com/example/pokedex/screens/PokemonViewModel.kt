@@ -21,6 +21,7 @@ class PokemonViewModel @Inject constructor(
 
     private var offset = 0
     private val limit = 20
+    private var hasNextPage = true
 
     init {
         loadPokemonList()
@@ -28,15 +29,22 @@ class PokemonViewModel @Inject constructor(
 
     private fun loadPokemonList() {
         viewModelScope.launch {
-            val pokemonList = repo.getPokemonList(limit, offset)
-            _state.value = pokemonList
-            Log.d("pokemonViewModel", pokemonList.toString())
+            try {
+                val pokemonListResponse = repo.getPokemonList(limit, offset)
+                _state.value = pokemonListResponse.results
+                hasNextPage = pokemonListResponse.next != null
+            } catch (e: Exception) {
+                // TODO Manejar el error
+                Log.e("PokemonViewModel", "Error loading Pokémon list", e)
+            }
         }
     }
 
     fun nextPage() {
-        offset += limit
-        loadPokemonList()
+        if (hasNextPage) {
+            offset += limit
+            loadPokemonList()
+        }
     }
 
     fun previousPage() {

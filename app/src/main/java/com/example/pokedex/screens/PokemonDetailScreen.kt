@@ -42,7 +42,9 @@ fun PokemonDetailScreen(pokemonName: String, viewModel: PokemonDetailViewModel =
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(250.dp),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop/*,
+                placeholder = painterResource(R.drawable.placeholder), // TODO Agrega un placeholder
+                error = painterResource(R.drawable.error) // TODO Agrega una imagen de error*/
             )
 
             // Información del Pokémon en la parte inferior

@@ -27,7 +27,11 @@ fun AppNavigation() {
             route = AppRoutes.POKEMON_DETAIL + "/{pokemonName}"
         ) { backStackEntry ->
             val pokemonName = backStackEntry.arguments?.getString("pokemonName") ?: ""
-            PokemonDetailScreen(pokemonName = pokemonName)
+            if (pokemonName != null) {
+                PokemonDetailScreen(pokemonName = pokemonName)
+            } else {
+                // TODO Manejar el error
+            }
         }
     }
 }

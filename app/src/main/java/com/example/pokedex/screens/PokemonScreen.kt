@@ -175,7 +175,9 @@ fun PokemonCard(
                     AsyncImage(
                         model = url,
                         contentDescription = pokemon.name,
-                        contentScale = ContentScale.FillBounds
+                        contentScale = ContentScale.FillBounds/*,
+                        placeholder = painterResource(R.drawable.placeholder), // TODO Agrega un placeholder
+                        error = painterResource(R.drawable.error) // TODO Agrega una imagen de error*/
                     )
                 }
             }
