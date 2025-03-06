@@ -18,8 +18,11 @@ data class PokemonTypeDetail(
 )
 
 data class PokemonDetail(
+    val name: String,
+    val type: String,
+    val imageUrl: String,
     val sprites: PokemonSprites,
-    val types: List<PokemonType> // Lista de tipos desde la API
+    val types: List<PokemonType>? = null
 )
 
 data class PokemonSprites(

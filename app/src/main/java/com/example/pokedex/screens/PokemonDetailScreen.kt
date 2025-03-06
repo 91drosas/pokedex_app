@@ -1,65 +1,33 @@
 package com.example.pokedex.screens
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.example.pokedex.R
+import androidx.compose.ui.unit.sp
+import android.util.Base64
 
 @Composable
 fun PokemonDetailScreen(
-    pokemonId: String,
-    navController: NavController
+    encryptedPokemonUrl: String
 ) {
-    // Aquí puedes obtener los detalles del Pokémon usando el ID (por ejemplo, desde un ViewModel)
-    val viewModel: PokemonDetailViewModel = hiltViewModel()
-    val pokemonDetail by viewModel.pokemonDetail.collectAsState()
+    val decryptedUrl = decryptUrl(encryptedPokemonUrl)
 
-    // Simular la carga de detalles
-    LaunchedEffect(pokemonId) {
-        viewModel.loadPokemonDetail(pokemonId)
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
     ) {
-        // Botón para regresar
-        IconButton(onClick = { navController.popBackStack() }) {
-            Icon(
-                painter = painterResource(id = R.drawable.icon_back),
-                contentDescription = "Volver"
-            )
-        }
-
-        // Mostrar detalles del Pokémon
-        if (pokemonDetail != null) {
-            Text(
-                text = pokemonDetail!!.name.uppercase(),
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Tipo: ${pokemonDetail!!.type}",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            // Agrega más detalles aquí (imagen, estadísticas, etc.)
-        } else {
-            Text("Cargando...")
-        }
+        Text(
+            text = "URL: $decryptedUrl",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
+}
+
+fun decryptUrl(encryptedUrl: String): String {
+    return String(Base64.decode(encryptedUrl, Base64.DEFAULT))
 }

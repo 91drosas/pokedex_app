@@ -22,3 +22,36 @@ data class PokemonDetailResult(
     val types: List<PokemonType>,
     val weight: Int
 )
+
+data class Ability(
+    val name: String
+)
+
+data class Cries(
+    val name: String
+)
+
+data class Form(
+    val name: String
+)
+
+data class GameIndice(
+    val name: String
+)
+
+data class Move(
+    val name: String
+)
+
+data class Species(
+    val name: String
+)
+
+data class Sprites(
+    val name: String,
+    val front_default: String
+)
+
+data class Stat(
+    val name: String
+)

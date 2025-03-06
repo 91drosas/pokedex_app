@@ -1,6 +1,7 @@
 package com.example.pokedex.screens
 
 import android.app.Activity
+import android.util.Base64
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -37,7 +37,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -49,7 +48,6 @@ import com.example.pokedex.R
 import com.example.pokedex.model.Pokemon
 import com.example.pokedex.utils.Constants.typeColors
 import com.example.pokedex.utils.Constants.typeTranslations
-import java.util.Locale
 
 @Composable
 fun PokemonScreen(
@@ -121,7 +119,8 @@ fun PokemonScreen(
                 PokemonCard(
                     pokemon = pokemon,
                     onClick = {
-                        navController.navigate("pokemon_detail/${pokemon.name}")
+                        val encryptedUrl = encryptUrl(pokemon.url)
+                        navController.navigate("pokemon_detail/$encryptedUrl")
                     }
                 )
             }
@@ -134,7 +133,8 @@ fun PokemonScreen(
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = { viewModel.previousPage() },
+            Button(
+                onClick = { viewModel.previousPage() },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.Black,
                     contentColor = Color.White
@@ -159,6 +159,10 @@ fun PokemonScreen(
             }
         }
     }
+}
+
+fun encryptUrl(url: String): String {
+    return Base64.encodeToString(url.toByteArray(), Base64.DEFAULT)
 }
 
 @Composable

@@ -2,8 +2,7 @@ package com.example.pokedex.repository
 
 import com.example.pokedex.api.PokemonListApi
 import com.example.pokedex.model.Pokemon
-import com.example.pokedex.model.PokemonList
-import com.example.pokedex.model.PokemonSelectedDetail
+import com.example.pokedex.model.PokemonDetail
 import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(
@@ -19,13 +18,14 @@ class PokemonRepository @Inject constructor(
         }
     }
 
-    suspend fun getPokemonDetail(pokemonId: String): PokemonSelectedDetail {
+    suspend fun getPokemonDetail(pokemonId: String): PokemonDetail {
         val response = pokemonListApi.getPokemonDetail(pokemonId)
-        return PokemonSelectedDetail(
-            id = response.id.toString(),
+        return PokemonDetail(
             name = response.name,
-            type = response.types.joinToString { it.type.name },
-            imageUrl = response.sprites.front_default
+            type = response.type,
+            imageUrl = response.imageUrl,
+            sprites = response.sprites,
+            types = response.types
         )
     }
 }

@@ -1,6 +1,6 @@
 package com.example.pokedex.api
 
-import com.example.pokedex.model.PokemonDetailResult
+import com.example.pokedex.model.PokemonDetail
 import com.example.pokedex.model.PokemonList
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -14,5 +14,5 @@ interface PokemonListApi {
     ): PokemonList
 
     @GET
-    suspend fun getPokemonDetail(@Url url: String): PokemonDetailResult
+    suspend fun getPokemonDetail(@Url url: String): PokemonDetail
 }
