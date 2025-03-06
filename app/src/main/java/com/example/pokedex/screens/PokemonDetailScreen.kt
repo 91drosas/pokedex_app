@@ -37,7 +37,7 @@ fun PokemonDetailScreen(pokemonName: String, viewModel: PokemonDetailViewModel =
         ) {
             // Imagen en la parte superior
             AsyncImage(
-                model = detail.sprites.front_default,
+                model = detail.sprites.other.home.front_default,
                 contentDescription = detail.name,
                 modifier = Modifier
                     .fillMaxWidth()

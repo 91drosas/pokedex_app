@@ -1,7 +1,6 @@
 package com.example.pokedex.screens
 
 import android.app.Activity
-import android.util.Base64
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,27 +54,7 @@ fun PokemonScreen(
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
-    val context = LocalContext.current
-    val view = LocalView.current
     Log.d("pokemonScreen", "${state.size}")
-
-    // Ocultar la barra de navegación y la barra de notificaciones
-    DisposableEffect(Unit) {
-        val window = (context as Activity).window
-        val insetsController = WindowCompat.getInsetsController(window, view)
-
-        // Configurar el comportamiento de las barras del sistema
-        insetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-
-        // Ocultar la barra de notificaciones y la barra de navegación
-        insetsController.hide(WindowInsetsCompat.Type.systemBars())
-
-        // Restaurar la visibilidad de las barras al salir de la pantalla
-        onDispose {
-            insetsController.show(WindowInsetsCompat.Type.systemBars())
-        }
-    }
 
     Column(
         modifier = Modifier
@@ -119,7 +98,6 @@ fun PokemonScreen(
                 PokemonCard(
                     pokemon = pokemon,
                     onClick = {
-                        //val encryptedUrl = encryptUrl(pokemon.url)
                         navController.navigate("pokemon_detail/${pokemon.name}")
                     }
                 )
@@ -159,10 +137,6 @@ fun PokemonScreen(
             }
         }
     }
-}
-
-fun encryptUrl(url: String): String {
-    return Base64.encodeToString(url.toByteArray(), Base64.DEFAULT)
 }
 
 @Composable

@@ -1,6 +1,6 @@
 package com.example.pokedex.di
 
-import com.example.pokedex.api.PokemonListApi
+import com.example.pokedex.api.PokemonApi
 import com.example.pokedex.utils.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -15,12 +15,12 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideApi(): PokemonListApi{
+    fun provideApi(): PokemonApi{
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(PokemonListApi::class.java)
+            .create(PokemonApi::class.java)
 
     }
 }

@@ -1,8 +1,8 @@
 package com.example.pokedex.screens
 
-import PokemonDetail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokedex.model.PokemonDetail
 import com.example.pokedex.repository.PokemonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +24,7 @@ class PokemonDetailViewModel @Inject constructor(
                 val detail = repository.getPokemonDetail(pokemonName)
                 _pokemonDetail.value = detail
             } catch (e: Exception) {
-                // Manejar el error (por ejemplo, mostrar un mensaje de error)
+                // TODO Manejar el error (por ejemplo, mostrar un mensaje de error)
             }
         }
     }

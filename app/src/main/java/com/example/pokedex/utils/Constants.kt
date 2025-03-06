@@ -50,4 +50,8 @@ object Constants {
         "flying" to "volador",
         "egg" to "huevo"
     )
+
+    fun String.toPokemonDetailUrl(): String {
+        return "$BASE_URL/pokemon/$this/"
+    }
 }

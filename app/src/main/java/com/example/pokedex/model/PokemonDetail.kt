@@ -1,8 +1,10 @@
+package com.example.pokedex.model
+
 data class PokemonDetail(
     val name: String,
     val species: Species,
-    val height: Int,  // Debería ser Int
-    val weight: Int,  // Debería ser Int
+    val height: Int,
+    val weight: Int,
     val stats: List<Stat>,
     val sprites: PokemonSprites,
     val types: List<PokemonType>
@@ -24,6 +26,15 @@ data class StatInfo(
 )
 
 data class PokemonSprites(
+    val front_default: String,
+    val other: Other
+)
+
+data class Other(
+    val home: Home,
+)
+
+data class Home(
     val front_default: String
 )
 
