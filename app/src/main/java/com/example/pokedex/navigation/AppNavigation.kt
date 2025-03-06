@@ -24,10 +24,10 @@ fun AppNavigation() {
 
         // Pantalla de detalles del Pokémon
         composable(
-            route = AppRoutes.POKEMON_DETAIL + "/{pokemonUrl}"
+            route = AppRoutes.POKEMON_DETAIL + "/{pokemonName}"
         ) { backStackEntry ->
-            val encryptedUrl = backStackEntry.arguments?.getString("pokemonUrl") ?: ""
-            PokemonDetailScreen(encryptedPokemonUrl = encryptedUrl)
+            val pokemonName = backStackEntry.arguments?.getString("pokemonName") ?: ""
+            PokemonDetailScreen(pokemonName = pokemonName)
         }
     }
 }

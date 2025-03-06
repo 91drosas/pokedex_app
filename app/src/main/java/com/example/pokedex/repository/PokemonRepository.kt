@@ -1,8 +1,11 @@
 package com.example.pokedex.repository
 
+import PokemonDetail
 import com.example.pokedex.api.PokemonListApi
 import com.example.pokedex.model.Pokemon
-import com.example.pokedex.model.PokemonDetail
+import com.example.pokedex.utils.Constants.BASE_URL
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(
@@ -18,14 +21,17 @@ class PokemonRepository @Inject constructor(
         }
     }
 
-    suspend fun getPokemonDetail(pokemonId: String): PokemonDetail {
-        val response = pokemonListApi.getPokemonDetail(pokemonId)
-        return PokemonDetail(
-            name = response.name,
-            type = response.type,
-            imageUrl = response.imageUrl,
-            sprites = response.sprites,
-            types = response.types
+    suspend fun getPokemonDetail(pokemonName: String): PokemonDetail {
+        val response = withContext(Dispatchers.IO) {
+            pokemonListApi.getPokemonDetail(BASE_URL + "pokemon/" + pokemonName + "/")
+        }
+
+        // Convertimos height y weight a enteros
+        val pokemonDetail = response.copy(
+            height = response.height.toInt(),  // Convertir de String a Int
+            weight = response.weight.toInt()   // Convertir de String a Int
         )
+
+        return pokemonDetail
     }
 }

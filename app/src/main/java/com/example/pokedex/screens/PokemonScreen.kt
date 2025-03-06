@@ -119,8 +119,8 @@ fun PokemonScreen(
                 PokemonCard(
                     pokemon = pokemon,
                     onClick = {
-                        val encryptedUrl = encryptUrl(pokemon.url)
-                        navController.navigate("pokemon_detail/$encryptedUrl")
+                        //val encryptedUrl = encryptUrl(pokemon.url)
+                        navController.navigate("pokemon_detail/${pokemon.name}")
                     }
                 )
             }
