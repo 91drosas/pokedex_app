@@ -1,6 +1,8 @@
 package com.example.pokedex.utils
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.example.pokedex.R
 
 object Constants {
     const val BASE_URL = "https://pokeapi.co/api/v2/"
@@ -50,6 +52,30 @@ object Constants {
         "flying" to "volador",
         "egg" to "huevo"
     )
+
+    @Composable
+    fun getTypeIcon(type: String): Int {
+        return when (type) {
+            "fire" -> R.drawable.ic_type_fire
+            "water" -> R.drawable.ic_type_water
+            "grass" -> R.drawable.ic_type_grass
+            "electric" -> R.drawable.ic_type_electric
+            "ice" -> R.drawable.ic_type_ice
+            "fighting" -> R.drawable.ic_type_fighting
+            "poison" -> R.drawable.ic_type_poison
+            "ground" -> R.drawable.ic_type_ground
+            "flying" -> R.drawable.ic_type_flying
+            "psychic" -> R.drawable.ic_type_psychic
+            "bug" -> R.drawable.ic_type_bug
+            "rock" -> R.drawable.ic_type_rock
+            "ghost" -> R.drawable.ic_type_ghost
+            "dragon" -> R.drawable.ic_type_dragon
+            "dark" -> R.drawable.ic_type_dark
+            "steel" -> R.drawable.ic_type_steel
+            "fairy" -> R.drawable.ic_type_fairy
+            else -> R.drawable.ic_type_unknown
+        }
+    }
 
     fun String.toPokemonDetailUrl(): String {
         return "$BASE_URL/pokemon/$this/"
